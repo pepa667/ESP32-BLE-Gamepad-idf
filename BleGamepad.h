@@ -3,8 +3,8 @@
 #include "sdkconfig.h"
 #if defined(CONFIG_BT_ENABLED)
 
-#include "nimconfig.h"
-#if defined(CONFIG_BT_NIMBLE_ROLE_PERIPHERAL)
+#include "syscfg/syscfg.h"
+#if CONFIG_BT_NIMBLE_ENABLED && MYNEWT_VAL(BLE_ROLE_PERIPHERAL)
 
 #include "BleConnectionStatus.h"
 #include "BleGamepadOutput.h"
@@ -115,6 +115,6 @@ protected:
     virtual void onStarted(NimBLEServer *pServer){};
 };
 
-#endif // CONFIG_BT_NIMBLE_ROLE_PERIPHERAL
+#endif // CONFIG_BT_NIMBLE_ENABLED && BLE_ROLE_PERIPHERAL
 #endif // CONFIG_BT_ENABLED
 #endif // ESP32_BLE_GAMEPAD_H

@@ -4,7 +4,6 @@
 #include "NimBLEHIDDevice.h"
 #include "HIDTypes.h"
 #include "HIDKeyboardTypes.h"
-#include <driver/adc.h>
 #include "sdkconfig.h"
 
 #include "BleConnectionStatus.h"
@@ -1409,7 +1408,7 @@ void BleGamepad::setBatteryLevel(uint8_t level)
 
         if (this->isConnected())
         {
-            this->hid->batteryLevel()->notify();
+            this->hid->getBatteryLevel()->notify();
         }
 		
         if (configuration.getAutoReport())
@@ -1434,8 +1433,8 @@ void BleGamepad::taskServer(void *pvParameter)
 
     BleGamepadInstance->hid = new NimBLEHIDDevice(pServer);
 
-    BleGamepadInstance->inputGamepad = BleGamepadInstance->hid->inputReport(BleGamepadInstance->configuration.getHidReportId()); // <-- input REPORTID from report map
-    BleGamepadInstance->outputGamepad = BleGamepadInstance->hid->outputReport(BleGamepadInstance->configuration.getHidReportId() + 1); // <-- output REPORTID from report map
+    BleGamepadInstance->inputGamepad = BleGamepadInstance->hid->getInputReport(BleGamepadInstance->configuration.getHidReportId()); // <-- input REPORTID from report map
+    BleGamepadInstance->outputGamepad = BleGamepadInstance->hid->getOutputReport(BleGamepadInstance->configuration.getHidReportId() + 1); // <-- output REPORTID from report map
 
     BleGamepadInstance->connectionStatus->inputGamepad = BleGamepadInstance->inputGamepad;
     BleGamepadInstance->connectionStatus->outputGamepad = BleGamepadInstance->outputGamepad;
@@ -1447,7 +1446,7 @@ void BleGamepad::taskServer(void *pvParameter)
     }
     BleGamepadInstance->outputGamepad->setCallbacks(BleGamepadInstance->outputCallBack);
 
-    BleGamepadInstance->hid->manufacturer()->setValue(BleGamepadInstance->deviceManufacturer);
+    BleGamepadInstance->hid->setManufacturer(BleGamepadInstance->deviceManufacturer);
 
     NimBLEService *pService = pServer->getServiceByUUID(SERVICE_UUID_DEVICE_INFORMATION);
 	
@@ -1481,8 +1480,8 @@ void BleGamepad::taskServer(void *pvParameter)
     );
     pCharacteristic_Hardware_Revision->setValue(hardwareRevision);
 
-    BleGamepadInstance->hid->pnp(0x01, vid, pid, 0x0110);
-    BleGamepadInstance->hid->hidInfo(0x00, 0x01);
+    BleGamepadInstance->hid->setPnp(0x01, vid, pid, 0x0110);
+    BleGamepadInstance->hid->setHidInfo(0x00, 0x01);
 
     NimBLEDevice::setSecurityAuth(BLE_SM_PAIR_AUTHREQ_BOND);
 
@@ -1493,14 +1492,14 @@ void BleGamepad::taskServer(void *pvParameter)
     //for (int i = 0; i < hidReportDescriptorSize; i++)
     //    Serial.printf("%02x", customHidReportDescriptor[i]);
 
-    BleGamepadInstance->hid->reportMap((uint8_t *)customHidReportDescriptor, hidReportDescriptorSize);
+    BleGamepadInstance->hid->setReportMap((uint8_t *)customHidReportDescriptor, hidReportDescriptorSize);
     BleGamepadInstance->hid->startServices();
 
     BleGamepadInstance->onStarted(pServer);
 
     NimBLEAdvertising *pAdvertising = pServer->getAdvertising();
     pAdvertising->setAppearance(HID_GAMEPAD);
-    pAdvertising->addServiceUUID(BleGamepadInstance->hid->hidService()->getUUID());
+    pAdvertising->addServiceUUID(BleGamepadInstance->hid->getHidService()->getUUID());
     pAdvertising->start();
     BleGamepadInstance->hid->setBatteryLevel(BleGamepadInstance->batteryLevel);
 

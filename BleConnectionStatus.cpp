@@ -1,4 +1,5 @@
 #include "BleConnectionStatus.h"
+#include "NimBLEConnInfo.h"
 
 BleConnectionStatus::BleConnectionStatus(void)
 {
