@@ -22,12 +22,19 @@ BleGamepadConfiguration::BleGamepadConfiguration() : _controllerType(CONTROLLER_
                                                      _modelNumber("1.0.0"),
                                                      _softwareRevision("1.0.0"),
                                                      _serialNumber("0123456789"),
+<<<<<<< HEAD
                                                      _firmwareRevision("0.7.4"),
                                                      _hardwareRevision("1.0.0"),
                                                      _enableOutputReport(false),
                                                      _enableNordicUARTService(false),
                                                      _outputReportLength(64),
                                                      _transmitPowerLevel(9)
+=======
+                                                     _firmwareRevision("0.5.2"),
+                                                     _hardwareRevision("1.0.0"),
+                                                     _hasRumble(false),
+                                                     _rumbleCallBack(NULL)
+>>>>>>> 84a98055b6900cbf670c492410358db52bc83bd2
 {
 }
 
@@ -124,6 +131,7 @@ bool BleGamepadConfiguration::getIncludeAccelerator() { return _whichSimulationC
 bool BleGamepadConfiguration::getIncludeBrake() { return _whichSimulationControls[BRAKE]; }
 bool BleGamepadConfiguration::getIncludeSteering() { return _whichSimulationControls[STEERING]; }
 const bool *BleGamepadConfiguration::getWhichSimulationControls() const { return _whichSimulationControls; }
+<<<<<<< HEAD
 bool BleGamepadConfiguration::getIncludeGyroscope() { return _includeGyroscope; }
 bool BleGamepadConfiguration::getIncludeAccelerometer() { return _includeAccelerometer; }
 const char *BleGamepadConfiguration::getModelNumber(){ return _modelNumber; }
@@ -135,6 +143,15 @@ bool BleGamepadConfiguration::getEnableOutputReport(){ return _enableOutputRepor
 bool BleGamepadConfiguration::getEnableNordicUARTService(){ return _enableNordicUARTService; }
 uint16_t BleGamepadConfiguration::getOutputReportLength(){ return _outputReportLength; }
 int8_t BleGamepadConfiguration::getTXPowerLevel(){ return _transmitPowerLevel; }	// Returns the power level that was set as the server started
+=======
+char *BleGamepadConfiguration::getModelNumber(){ return _modelNumber; }
+char *BleGamepadConfiguration::getSoftwareRevision(){ return _softwareRevision; }
+char *BleGamepadConfiguration::getSerialNumber(){ return _serialNumber; }
+char *BleGamepadConfiguration::getFirmwareRevision(){ return _firmwareRevision; }
+char *BleGamepadConfiguration::getHardwareRevision(){ return _hardwareRevision; }
+bool BleGamepadConfiguration::getHasRumble() { return _hasRumble; }
+RumbleCallBackFunc BleGamepadConfiguration::getRumbleCallBack() { return _rumbleCallBack; }
+>>>>>>> 84a98055b6900cbf670c492410358db52bc83bd2
 
 void BleGamepadConfiguration::setWhichSpecialButtons(bool start, bool select, bool menu, bool home, bool back, bool volumeInc, bool volumeDec, bool volumeMute)
 {
@@ -204,6 +221,7 @@ void BleGamepadConfiguration::setAxesMin(int16_t value) { _axesMin = value; }
 void BleGamepadConfiguration::setAxesMax(int16_t value) { _axesMax = value; }
 void BleGamepadConfiguration::setSimulationMin(int16_t value) { _simulationMin = value; }
 void BleGamepadConfiguration::setSimulationMax(int16_t value) { _simulationMax = value; }
+<<<<<<< HEAD
 void BleGamepadConfiguration::setMotionMin(int16_t value) { _motionMin = value; }
 void BleGamepadConfiguration::setMotionMax(int16_t value) { _motionMax = value; }
 void BleGamepadConfiguration::setModelNumber(const char *value) { _modelNumber = value; }
@@ -215,3 +233,12 @@ void BleGamepadConfiguration::setEnableOutputReport(bool value) { _enableOutputR
 void BleGamepadConfiguration::setEnableNordicUARTService(bool value) { _enableNordicUARTService = value; }
 void BleGamepadConfiguration::setOutputReportLength(uint16_t value) { _outputReportLength = value; }
 void BleGamepadConfiguration::setTXPowerLevel(int8_t value) { _transmitPowerLevel = value; }
+=======
+void BleGamepadConfiguration::setModelNumber(char *value) { _modelNumber = value; }
+void BleGamepadConfiguration::setSoftwareRevision(char *value) { _softwareRevision = value; }
+void BleGamepadConfiguration::setSerialNumber(char *value) { _serialNumber = value; }
+void BleGamepadConfiguration::setFirmwareRevision(char *value) { _firmwareRevision = value; }
+void BleGamepadConfiguration::setHardwareRevision(char *value) { _hardwareRevision = value; }
+void BleGamepadConfiguration::setHasRumble(bool value) { _hasRumble = value; }
+void BleGamepadConfiguration::setRumbleCallBack(void (*value)(RumbleData*)) { _rumbleCallBack = value; }
+>>>>>>> 84a98055b6900cbf670c492410358db52bc83bd2

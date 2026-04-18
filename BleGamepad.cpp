@@ -40,9 +40,27 @@ static const char *LOG_TAG = "BLEGamepad";
 #define POWER_STATE_CHARGING        3 // 0b11
 #define POWER_STATE_CRITICAL        3 // 0b11
 
+<<<<<<< HEAD
 #if BLE_GAMEPAD_DEBUG == 1
 static void dumpHIDReport(const uint8_t* report, size_t len);
 #endif
+=======
+uint8_t tempHidReportDescriptor[210];
+int hidReportDescriptorSize = 0;
+uint8_t reportSize = 0;
+uint8_t numOfButtonBytes = 0;
+uint16_t vid;
+uint16_t pid;
+uint16_t axesMin;
+uint16_t axesMax;
+uint16_t simulationMin;
+uint16_t simulationMax;
+std::string modelNumber;
+std::string softwareRevision;
+std::string serialNumber;
+std::string firmwareRevision;
+std::string hardwareRevision;
+>>>>>>> 84a98055b6900cbf670c492410358db52bc83bd2
 
 BleGamepad::BleGamepad(std::string deviceName, std::string deviceManufacturer, uint8_t batteryLevel, bool delayAdvertising) : _buttons(),
   _specialButtons(0),
@@ -92,6 +110,15 @@ BleGamepad::BleGamepad(std::string deviceName, std::string deviceManufacturer, u
   enableOutputReport = false;
   outputReportLength = 64;
   nusInitialized = false;
+}
+
+uint8_t lowByte(uint16_t input)
+{
+    return input & 0xff;
+}
+uint8_t highByte(uint16_t input)
+{
+    return (input>>8) & 0xff;
 }
 
 void BleGamepad::resetButtons()
@@ -384,6 +411,7 @@ void BleGamepad::begin(BleGamepadConfiguration *config)
       tempHidReportDescriptor[hidReportDescriptorSize++] = 0x30;
     }
 
+<<<<<<< HEAD
     if (configuration.getIncludeYAxis())
     {
       // USAGE (Y)
@@ -468,6 +496,47 @@ void BleGamepad::begin(BleGamepadConfiguration *config)
     }
 
     // END_COLLECTION (Physical)
+=======
+    if (configuration.getHasRumble())
+    {
+        // USAGE_PAGE (Physical Interface Device Page)
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x05;
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x0F;
+
+        // REPORT_ID (Default: 4)
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x85;
+        tempHidReportDescriptor[hidReportDescriptorSize++] = configuration.getHidReportId() + 1;
+
+        // USAGE (DC Enable Actuators)
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x09;
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x97;
+
+        // LOGICAL_MINIMUM (0)
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x15;
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x00;
+
+        // LOGICAL_MAXIMUM (65535)
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x27;
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0xFF;
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0xFF;
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x00;
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x00;
+
+        // REPORT_SIZE (8)
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x75;
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x10;
+
+        // REPORT_COUNT (2)
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x95;
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x02;
+
+        // OUTPUT (Data)
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x91;
+        tempHidReportDescriptor[hidReportDescriptorSize++] = 0x02;
+    }
+
+    // END_COLLECTION (Application)
+>>>>>>> 84a98055b6900cbf670c492410358db52bc83bd2
     tempHidReportDescriptor[hidReportDescriptorSize++] = 0xc0;
 
   } // X, Y, Z, Rx, Ry, and Rz Axis
@@ -1120,8 +1189,21 @@ void BleGamepad::release(uint8_t b)
   }
 }
 
+void BleGamepad::setState(uint8_t b, bool s)
+{
+    if (s)
+    {
+        press(b);
+    }
+    else
+    {
+        release(b);
+    }
+}
+
 uint8_t BleGamepad::specialButtonBitPosition(uint8_t b)
 {
+<<<<<<< HEAD
   uint8_t bit = 0;
   
   if (b >= POSSIBLESPECIALBUTTONS)
@@ -1131,6 +1213,11 @@ uint8_t BleGamepad::specialButtonBitPosition(uint8_t b)
   }
   else
   {
+=======
+    if (b >= POSSIBLESPECIALBUTTONS)
+        abort();
+    uint8_t bit = 0;
+>>>>>>> 84a98055b6900cbf670c492410358db52bc83bd2
     for (int i = 0; i < b; i++)
     {
       if (configuration.getWhichSpecialButtons()[i])
@@ -1176,6 +1263,18 @@ void BleGamepad::releaseSpecialButton(uint8_t b)
   {
     sendReport();
   }
+}
+
+void BleGamepad::setStateSpecialButton(uint8_t b, bool s)
+{
+    if (s)
+    {
+        pressSpecialButton(b);
+    }
+    else
+    {
+        releaseSpecialButton(b);
+    }
 }
 
 void BleGamepad::pressStart()
@@ -2073,8 +2172,23 @@ void BleGamepad::taskServer(void *pvParameter)
 
   BleGamepadInstance->hid = new NimBLEHIDDevice(pServer);
 
+<<<<<<< HEAD
   BleGamepadInstance->inputGamepad = BleGamepadInstance->hid->getInputReport(BleGamepadInstance->configuration.getHidReportId()); // <-- input REPORTID from report map
   BleGamepadInstance->connectionStatus->inputGamepad = BleGamepadInstance->inputGamepad;
+=======
+    BleGamepadInstance->inputGamepad = BleGamepadInstance->hid->inputReport(BleGamepadInstance->configuration.getHidReportId()); // <-- input REPORTID from report map
+    BleGamepadInstance->outputGamepad = BleGamepadInstance->hid->outputReport(BleGamepadInstance->configuration.getHidReportId() + 1); // <-- output REPORTID from report map
+
+    BleGamepadInstance->connectionStatus->inputGamepad = BleGamepadInstance->inputGamepad;
+    BleGamepadInstance->connectionStatus->outputGamepad = BleGamepadInstance->outputGamepad;
+
+    BleGamepadInstance->outputCallBack = new BleGamepadOutput();
+    if (BleGamepadInstance->configuration.getRumbleCallBack() != NULL)
+    {
+        BleGamepadInstance->outputCallBack->func = BleGamepadInstance->configuration.getRumbleCallBack();
+    }
+    BleGamepadInstance->outputGamepad->setCallbacks(BleGamepadInstance->outputCallBack);
+>>>>>>> 84a98055b6900cbf670c492410358db52bc83bd2
 
   if (BleGamepadInstance->enableOutputReport) 
   {

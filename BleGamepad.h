@@ -7,6 +7,7 @@
 #if defined(CONFIG_BT_NIMBLE_ROLE_PERIPHERAL)
 
 #include "BleConnectionStatus.h"
+#include "BleGamepadOutput.h"
 #include "NimBLEHIDDevice.h"
 #include "NimBLECharacteristic.h"
 #include "BleGamepadConfiguration.h"
@@ -61,6 +62,7 @@ class BleGamepad
     bool nusInitialized;
     
     BleConnectionStatus *connectionStatus;
+<<<<<<< HEAD
     BleOutputReceiver *outputReceiver;
     NimBLEServer *pServer;
     BleNUS* nus;
@@ -71,6 +73,13 @@ class BleGamepad
     NimBLECharacteristic *pCharacteristic_Power_State;
 
     uint8_t *outputBackupBuffer;
+=======
+    BleGamepadOutput *outputCallBack;
+
+    NimBLEHIDDevice *hid;
+    NimBLECharacteristic *inputGamepad;
+    NimBLECharacteristic *outputGamepad;
+>>>>>>> 84a98055b6900cbf670c492410358db52bc83bd2
 
     void rawAction(uint8_t msg[], char msgSize);
     static void taskServer(void *pvParameter);
@@ -86,8 +95,10 @@ class BleGamepad
     void setHIDAxes(int16_t x = 0, int16_t y = 0, int16_t z = 0, int16_t rZ = 0, int16_t rX = 0, int16_t rY = 0, int16_t slider1 = 0, int16_t slider2 = 0);
     void press(uint8_t b = BUTTON_1);   // press BUTTON_1 by default
     void release(uint8_t b = BUTTON_1); // release BUTTON_1 by default
+    void setState(uint8_t b = BUTTON_1, bool s = false); // release BUTTON_1 by default
     void pressSpecialButton(uint8_t b);
     void releaseSpecialButton(uint8_t b);
+    void setStateSpecialButton(uint8_t b, bool s = false);
     void pressStart();
     void releaseStart();
     void pressSelect();

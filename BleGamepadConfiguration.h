@@ -5,7 +5,8 @@
 #define POSSIBLEAXES 8
 #define POSSIBLESIMULATIONCONTROLS 5
 
-#include <Arduino.h>
+#include "esp_system.h"
+#include "BleGamepadOutput.h"
 
 #define CONTROLLER_TYPE_JOYSTICK 0x04
 #define CONTROLLER_TYPE_GAMEPAD 0x05
@@ -230,6 +231,7 @@ private:
     int16_t _axesMax;
     int16_t _simulationMin;
     int16_t _simulationMax;
+<<<<<<< HEAD
     int16_t _motionMin;
     int16_t _motionMax;
     const char *_modelNumber;
@@ -242,6 +244,15 @@ private:
     uint16_t _outputReportLength;
     int8_t _transmitPowerLevel;
  
+=======
+    char *_modelNumber;
+    char *_softwareRevision;
+    char *_serialNumber;
+    char *_firmwareRevision;
+    char *_hardwareRevision;
+    bool _hasRumble;
+    RumbleCallBackFunc _rumbleCallBack;
+>>>>>>> 84a98055b6900cbf670c492410358db52bc83bd2
 
 public:
     BleGamepadConfiguration();
@@ -289,6 +300,7 @@ public:
     int16_t getAxesMax();
     int16_t getSimulationMin();
     int16_t getSimulationMax();
+<<<<<<< HEAD
     int16_t getMotionMin();
     int16_t getMotionMax();
     const char *getModelNumber();
@@ -300,6 +312,15 @@ public:
     bool getEnableNordicUARTService();
     uint16_t getOutputReportLength();
     int8_t getTXPowerLevel();
+=======
+    char *getModelNumber();
+    char *getSoftwareRevision();
+    char *getSerialNumber();
+    char *getFirmwareRevision();
+    char *getHardwareRevision();
+    bool getHasRumble();
+    RumbleCallBackFunc getRumbleCallBack();
+>>>>>>> 84a98055b6900cbf670c492410358db52bc83bd2
 
     void setControllerType(uint8_t controllerType);
     void setAutoReport(bool value);
@@ -339,6 +360,7 @@ public:
     void setAxesMax(int16_t value);
     void setSimulationMin(int16_t value);
     void setSimulationMax(int16_t value);
+<<<<<<< HEAD
     void setMotionMin(int16_t value);
     void setMotionMax(int16_t value);
     void setModelNumber(const char *value);
@@ -350,6 +372,15 @@ public:
     void setEnableNordicUARTService(bool value);
     void setOutputReportLength(uint16_t value);
     void setTXPowerLevel(int8_t value);
+=======
+    void setModelNumber(char *value);
+    void setSoftwareRevision(char *value);
+    void setSerialNumber(char *value);
+    void setFirmwareRevision(char *value);
+    void setHardwareRevision(char *value);
+    void setHasRumble(bool value);
+    void setRumbleCallBack(void (*func)(RumbleData*));
+>>>>>>> 84a98055b6900cbf670c492410358db52bc83bd2
 };
 
 #endif
